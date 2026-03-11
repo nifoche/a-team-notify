@@ -24,18 +24,18 @@ export interface QueryResult {
   locationNames: string[];
 }
 
-// クエリ1: 業務用LP/修理の6ヶ月以内のデータ
-const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS)`;
+// クエリ1: 業務用LP/修理の6ヶ月以内、特定現場のデータ
+const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店")`;
 
-// クエリ2: 業務用LP/修理/販売王のデータ
-const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS)`;
+// クエリ2: 業務用LP/修理/販売王の6ヶ月以内、特定現場のデータ
+const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店")`;
 
 async function fetchRecords(query: string): Promise<QueryResult> {
   const url = `https://${KINTONE_DOMAIN}/k/v1/records.json`;
 
   const params = new URLSearchParams({
     app: KINTONE_APP_ID,
-    query: `${query} order by UKETSUKEDATE desc limit 100`,
+    query: `${query} order by UKETSUKEDATE desc limit 500`,
   });
 
   console.log(`  クエリ: ${query}`);
@@ -49,11 +49,11 @@ async function fetchRecords(query: string): Promise<QueryResult> {
 
   const records = response.data.records;
 
-  // 現場名を集計（工事拠点フィールドは存在しない可能性があるため、顧客名を集計）
+  // 現場名を集計（工事拠点フィールドを使用）
   const locationCount = new Map<string, number>();
   records.forEach((record) => {
-    // まず工事拠点フィールドを試み、なければ顧客名を使用
-    const location = (record as any).工事拠点?.value || record.KOKYAKUMEI?.value || '未設定';
+    // 工事拠点フィールドを使用
+    const location = (record as any).KOUJIKYOTEN?.value || record.KOKYAKUMEI?.value || '未設定';
     locationCount.set(location, (locationCount.get(location) || 0) + 1);
   });
 
