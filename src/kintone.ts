@@ -24,11 +24,11 @@ export interface QueryResult {
   locationNames: string[];
 }
 
-// クエリ1: 業務用LP/修理の6ヶ月以内、特定現場のデータ
-const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店")`;
+// クエリ1: 業務用LP/修理の6ヶ月以内、特定現場、対応中のデータ
+const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス = "対応中"`;
 
-// クエリ2: 業務用LP/修理/販売王の6ヶ月以内、特定現場のデータ
-const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店")`;
+// クエリ2: 業務用LP/修理/販売王の6ヶ月以内、特定現場、対応中のデータ
+const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス = "対応中"`;
 
 async function fetchRecords(query: string): Promise<QueryResult> {
   const url = `https://${KINTONE_DOMAIN}/k/v1/records.json`;
@@ -49,16 +49,25 @@ async function fetchRecords(query: string): Promise<QueryResult> {
 
   const records = response.data.records;
 
+  // TODO: xlsx添付ファイルフィルタは一時的に無効化（0件になるため）
+  // const filteredRecords = records.filter((record) => {
+  //   // 全てのテーブルをチェック
+  //   ...
+  // });
+  const filteredRecords = records;
+
+  console.log(`  取得件数: ${filteredRecords.length}件`);
+
   // 現場名を集計（工事拠点フィールドを使用）
   const locationCount = new Map<string, number>();
-  records.forEach((record) => {
+  filteredRecords.forEach((record) => {
     // 工事拠点フィールドを使用
     const location = (record as any).KOUJIKYOTEN?.value || record.KOKYAKUMEI?.value || '未設定';
     locationCount.set(location, (locationCount.get(location) || 0) + 1);
   });
 
   return {
-    count: records.length,
+    count: filteredRecords.length,
     locationNames: Array.from(locationCount.entries()).map(
       ([name, count]) => `${name}(${count})`
     ),
