@@ -49,14 +49,49 @@ async function fetchRecords(query: string): Promise<QueryResult> {
 
   const records = response.data.records;
 
-  // TODO: xlsx添付ファイルフィルタは一時的に無効化（0件になるため）
-  // const filteredRecords = records.filter((record) => {
-  //   // 全てのテーブルをチェック
-  //   ...
-  // });
-  const filteredRecords = records;
+  // テーブル内のxlsx添付ファイルでフィルタ
+  const filteredRecords = records.filter((record, index) => {
+    // 全てのテーブルをチェック
+    const tables = [
+      { name: 'テーブル', data: (record as any).テーブル },
+      { name: 'テーブル_0', data: (record as any).テーブル_0 },
+      { name: 'テーブル_1', data: (record as any).テーブル_1 },
+      { name: 'テーブル_2', data: (record as any).テーブル_2 },
+      { name: 'テーブル_4', data: (record as any).テーブル_4 },
+    ];
 
-  console.log(`  取得件数: ${filteredRecords.length}件`);
+    let hasXlsx = false;
+
+    for (const { name, data } of tables) {
+      if (!data || !data.value) continue;
+
+      for (let rowIndex = 0; rowIndex < data.value.length; rowIndex++) {
+        const row = data.value[rowIndex];
+
+        // 添付ファイル_0と添付ファイル_4をチェック
+        const fileFields = [
+          { name: '添付ファイル_0', data: row.value?.添付ファイル_0 },
+          { name: '添付ファイル_4', data: row.value?.添付ファイル_4 },
+        ];
+
+        for (const { name: fname, data: files } of fileFields) {
+          if (!files || !files.value || !Array.isArray(files.value)) continue;
+
+          for (const file of files.value) {
+            const fileName = file.name || '';
+            if (fileName.toLowerCase().includes('xlsx')) {
+              console.log(`    [Match] レコード${index}: ${name}[${rowIndex}].${fname} = ${fileName}`);
+              hasXlsx = true;
+            }
+          }
+        }
+      }
+    }
+
+    return hasXlsx;
+  });
+
+  console.log(`  フィルタ前: ${records.length}件 → フィルタ後: ${filteredRecords.length}件（xlsx添付ファイルあり）`);
 
   // 現場名を集計（工事拠点フィールドを使用）
   const locationCount = new Map<string, number>();
