@@ -28,9 +28,11 @@ export async function sendToLINEWORKSWebhook(
 
 更新日時: ${new Date().toLocaleString('ja-JP')}`;
 
-  // LINE WORKS Webhookに送信（textパラメータを使用）
-  await axios.post(LINEWORKS_WEBHOOK_URL!, null, {
-    params: { text },
+  // LINE WORKS Webhookに送信（JSON body形式）
+  await axios.post(LINEWORKS_WEBHOOK_URL!, {
+    body: {
+      text,
+    },
   });
 
   console.log('✅ LINE WORKS通知を送信しました');
