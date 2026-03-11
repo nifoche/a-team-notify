@@ -24,11 +24,11 @@ export interface QueryResult {
   locationNames: string[];
 }
 
-// クエリ1: 業務用LP/修理の6ヶ月以内、特定現場、未着手・対応中・施工中のデータ
-const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス in ("未着手", "対応中", "施工中")`;
+// クエリ1: 業務用LP/修理/販売王の6ヶ月以内、特定現場、未着手・対応中・施工中のデータ
+const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス in ("未着手", "対応中", "施工中")`;
 
-// クエリ2: 業務用LP/修理/販売王の6ヶ月以内、特定現場、部門5、未着手・対応中・施工中のデータ
-const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and BUMON = "5" and ステータス in ("未着手", "対応中", "施工中")`;
+// クエリ2: 6ヶ月以内、特定現場、部門5、未着手・対応中・施工中のデータ（顧客名条件なし）
+const QUERY2 = `UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and BUMON = "5" and ステータス in ("未着手", "対応中", "施工中")`;
 
 async function fetchRecords(query: string): Promise<QueryResult> {
   const url = `https://${KINTONE_DOMAIN}/k/v1/records.json`;
