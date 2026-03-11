@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import { getQuery1Result, getQuery2Result } from './kintone.js';
 import { sendToSlack } from './slack.js';
-import { sendToLINEWORKSUser, sendToLINEWORKS } from './lineworks.js';
+import { sendToLINEWORKSWebhook } from './lineworks.js';
 
 async function main() {
   try {
@@ -17,20 +18,18 @@ async function main() {
     console.log(`  クエリ1: ${query1Result.count}件 (${query1Result.locationNames.join(', ') || '現場なし'})`);
     console.log(`  クエリ2: ${query2Result.count}件 (${query2Result.locationNames.join(', ') || '現場なし'})`);
 
-    // Slackに通知
-    console.log('📤 Slackに通知中...');
-    await sendToSlack(query1Result, query2Result);
+    // Slackに通知（設定されている場合のみ）
+    const slackBotToken = process.env.SLACK_BOT_TOKEN;
+    if (slackBotToken) {
+      console.log('📤 Slackに通知中...');
+      await sendToSlack(query1Result, query2Result);
+    } else {
+      console.log('⏭️  Slackはスキップします（トークン未設定）');
+    }
 
     // LINE WORKSに通知
     console.log('📤 LINE WORKSに通知中...');
-    // 特定のユーザーに送信する場合
-    const targetUserId = process.env.LINEWORKS_TARGET_USER_ID;
-    if (targetUserId) {
-      await sendToLINEWORKSUser(targetUserId, query1Result, query2Result);
-    } else {
-      // ルームに送信する場合は roomId を設定する必要があります
-      await sendToLINEWORKS(query1Result, query2Result);
-    }
+    await sendToLINEWORKSWebhook(query1Result, query2Result);
 
     console.log('🎉 すべての通知処理が完了しました！');
   } catch (error) {

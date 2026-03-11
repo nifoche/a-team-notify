@@ -1,19 +1,20 @@
 import { WebClient } from '@slack/web-api';
 import type { QueryResult } from './kintone.js';
 
-const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN!;
-const SLACK_CHANNEL_ID = process.env.SLACK_CHANNEL_ID!;
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+const SLACK_CHANNEL_ID = process.env.SLACK_CHANNEL_ID;
 
-if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL_ID) {
-  throw new Error('Missing Slack environment variables');
-}
-
-const client = new WebClient(SLACK_BOT_TOKEN);
+const client = SLACK_BOT_TOKEN && SLACK_CHANNEL_ID ? new WebClient(SLACK_BOT_TOKEN) : null;
 
 export async function sendToSlack(
   query1Result: QueryResult,
   query2Result: QueryResult
 ): Promise<void> {
+  if (!client || !SLACK_CHANNEL_ID) {
+    console.log('⏭️  Slackはスキップします（トークン未設定）');
+    return;
+  }
+
   const blocks = [
     {
       type: 'header',

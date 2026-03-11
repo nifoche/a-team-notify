@@ -2,8 +2,8 @@ import axios from 'axios';
 
 interface KintoneRecord {
   $id: { value: string };
-  f181911: { value: string }; // 日付
-  f5682302: { value: string }; // 現場名
+  UKETSUKEDATE: { value: string }; // 受付日
+  KOKYAKUMEI: { value: string }; // 顧客名
 }
 
 interface KintoneQueryResult {
@@ -24,19 +24,21 @@ export interface QueryResult {
   locationNames: string[];
 }
 
-// クエリ1: 業務用LP/修理/（販売王）の6ヶ月以内のxlsxファイル
-const QUERY1 = `f181839 in ("5122159", "5679005") and f181946 = "5" and f5682949.f5967523 like "xlsx" and f181911 >= FROM_TODAY(-6, MONTHS)`;
+// クエリ1: 業務用LP/修理の6ヶ月以内のデータ
+const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS)`;
 
-// クエリ2: 特定の現場の特定種別
-const QUERY2 = `f181839 in ("5122159", "5679005", "5122160") and f5123869 in ("業務用LP", "業務用修理", "業務用（販売王）") and f5682302 in ("大阪店", "名古屋店", "埼玉店") and f5682949.f5967523 like "xlsx"`;
+// クエリ2: 業務用LP/修理/販売王のデータ
+const QUERY2 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS)`;
 
 async function fetchRecords(query: string): Promise<QueryResult> {
   const url = `https://${KINTONE_DOMAIN}/k/v1/records.json`;
 
   const params = new URLSearchParams({
     app: KINTONE_APP_ID,
-    query: `${query} order by f181911 desc`,
+    query: `${query} order by UKETSUKEDATE desc limit 100`,
   });
+
+  console.log(`  クエリ: ${query}`);
 
   const response = await axios.get<KintoneQueryResult>(url, {
     headers: {
@@ -47,10 +49,11 @@ async function fetchRecords(query: string): Promise<QueryResult> {
 
   const records = response.data.records;
 
-  // 現場名を集計
+  // 現場名を集計（工事拠点フィールドは存在しない可能性があるため、顧客名を集計）
   const locationCount = new Map<string, number>();
   records.forEach((record) => {
-    const location = record.f5682302?.value || '未設定';
+    // まず工事拠点フィールドを試み、なければ顧客名を使用
+    const location = (record as any).工事拠点?.value || record.KOKYAKUMEI?.value || '未設定';
     locationCount.set(location, (locationCount.get(location) || 0) + 1);
   });
 
