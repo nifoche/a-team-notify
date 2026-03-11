@@ -15,6 +15,10 @@ const KINTONE_DOMAIN = process.env.KINTONE_DOMAIN!;
 const KINTONE_APP_ID = process.env.KINTONE_APP_ID!;
 const KINTONE_API_TOKEN = process.env.KINTONE_API_TOKEN!;
 
+// 655アプリ（工事依頼・完了報告・請求）
+const KINTONE_KOJIIRAI_APP_ID = "655";
+const KINTONE_KOJIIRAI_API_TOKEN = "QkkLngdFssXaOiPB1QzrcBSCng1SxsRQ0Pfkp4ZR";
+
 if (!KINTONE_DOMAIN || !KINTONE_APP_ID || !KINTONE_API_TOKEN) {
   throw new Error('Missing Kintone environment variables');
 }
@@ -24,8 +28,8 @@ export interface QueryResult {
   locationNames: string[];
 }
 
-// クエリ1: 業務用LP/修理/販売王の6ヶ月以内、特定現場、未着手・対応中・施工中のデータ
-const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス in ("未着手", "対応中", "施工中")`;
+// クエリ1: 業務用LP/修理/販売王、特定現場、未着手・対応中・施工中のデータ（期間条件なし）
+const QUERY1 = `KOKYAKUMEI in ("業務用LP", "業務用修理", "業務用（販売王）") and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and ステータス in ("未着手", "対応中", "施工中")`;
 
 // クエリ2: 6ヶ月以内、特定現場、部門5、未着手・対応中・施工中のデータ（顧客名条件なし）
 const QUERY2 = `UKETSUKEDATE >= FROM_TODAY(-6, MONTHS) and KOUJIKYOTEN in ("大阪店", "名古屋店", "埼玉店") and BUMON = "5" and ステータス in ("未着手", "対応中", "施工中")`;
@@ -49,62 +53,97 @@ async function fetchRecords(query: string): Promise<QueryResult> {
 
   const records = response.data.records;
 
-  // テーブル内のxlsx添付ファイルでフィルタ
-  const filteredRecords = records.filter((record, index) => {
-    // 全てのテーブルをチェック
-    const tables = [
-      { name: 'テーブル', data: (record as any).テーブル },
-      { name: 'テーブル_0', data: (record as any).テーブル_0 },
-      { name: 'テーブル_1', data: (record as any).テーブル_1 },
-      { name: 'テーブル_2', data: (record as any).テーブル_2 },
-      { name: 'テーブル_4', data: (record as any).テーブル_4 },
-    ];
+  // 両方のクエリで655アプリのxlsxフィルタを適用（「見積添付」フィールドのみ）
+  const isQuery1 = query.includes('KOKYAKUMEI in');
+  const isQuery2 = query.includes('BUMON = "5"');
 
-    let hasXlsx = false;
+  let filteredRecords: typeof records;
 
-    for (const { name, data } of tables) {
-      if (!data || !data.value) continue;
+  if (isQuery1 || isQuery2) {
+    // 新アプローチ: 655アプリからxlsxがあるレコードを取得し、104アプリと照合
+    const queryName = isQuery1 ? 'クエリ1' : 'クエリ2';
+    console.log(`  ${queryName}: 655アプリの「見積添付」xlsxファイルを確認中...`);
 
-      for (let rowIndex = 0; rowIndex < data.value.length; rowIndex++) {
-        const row = data.value[rowIndex];
+    // まず、104アプリのレコードの現場名をセットにする
+    const genbameiSet = new Set<string>();
+    records.forEach((record) => {
+      const genbamei = (record as any).GENBAMEI?.value;
+      if (genbamei) {
+        genbameiSet.add(genbamei);
+      }
+    });
 
-        // 添付ファイル_0と添付ファイル_4をチェック
-        const fileFields = [
-          { name: '添付ファイル_0', data: row.value?.添付ファイル_0 },
-          { name: '添付ファイル_4', data: row.value?.添付ファイル_4 },
-        ];
+    // 655アプリから「見積添付」にxlsxがあるレコードを取得
+    const filteredWithXlsx: typeof records = [];
 
-        for (const { name: fname, data: files } of fileFields) {
-          if (!files || !files.value || !Array.isArray(files.value)) continue;
+    // 104アプリの各レコードについて、655アプリを検索
+    for (const record104 of records) {
+      const genbamei = (record104 as any).GENBAMEI?.value;
+      const genbacode = (record104 as any).GENBACODE?.value;
 
-          for (const file of files.value) {
-            const fileName = file.name || '';
-            if (fileName.toLowerCase().includes('xlsx')) {
-              console.log(`    [Match] レコード${index}: ${name}[${rowIndex}].${fname} = ${fileName}`);
-              hasXlsx = true;
-            }
+      if (!genbamei || !genbacode) {
+        continue;
+      }
+
+      // 655アプリで現場名と管理番号が完全一致するレコードを検索
+      const query655 = `GENBA_OKYAKUSAMAMEI = "${genbamei.replace(/"/g, '\\"')}" and KANRIBANGOU = "${genbacode}" limit 100`;
+
+      try {
+        const response655 = await axios.get(url, {
+          headers: {
+            'X-Cybozu-API-Token': KINTONE_KOJIIRAI_API_TOKEN,
+          },
+          params: {
+            app: KINTONE_KOJIIRAI_APP_ID,
+            query: query655
+          },
+        });
+
+        // 655アプリのレコードに「見積添付」xlsxファイルがあるか確認
+        const hasXlsxIn655 = response655.data.records.some((record655: any) => {
+          // 「見積添付」フィールド（フィールドコード: 添付ファイル_0）のみをチェック
+          const field = record655['添付ファイル_0'];
+          if (field && field.value && field.value.length > 0) {
+            return field.value.some((file: any) => file.name.toLowerCase().includes('xlsx'));
           }
+          return false;
+        });
+
+        if (hasXlsxIn655) {
+          console.log(`    [Match] ${genbamei} [${genbacode}]: 「見積添付」xlsxファイルあり`);
+          filteredWithXlsx.push(record104);
         }
+      } catch (error) {
+        // エラーは無視（655アプリに該当レコードなし）
       }
     }
 
-    return hasXlsx;
-  });
+    filteredRecords = filteredWithXlsx;
+    console.log(`  ${queryName} フィルタ結果: ${records.length}件 → ${filteredRecords.length}件（「見積添付」xlsxファイルあり）`);
+  } else {
+    // 予期しないクエリ: フィルタなし
+    filteredRecords = records;
+    console.log(`  フィルタ: ${records.length}件（xlsxフィルタなし）`);
+  }
 
-  console.log(`  フィルタ前: ${records.length}件 → フィルタ後: ${filteredRecords.length}件（xlsx添付ファイルあり）`);
-
-  // 現場名を集計（現場名フィールドを使用）
+  // 現場名と工番を集計
   const locationCount = new Map<string, number>();
   filteredRecords.forEach((record) => {
-    // 現場名フィールドを使用（なければ工事拠点、なければ顧客名）
-    const location = (record as any).GENBAMEI?.value || (record as any).KOUJIKYOTEN?.value || record.KOKYAKUMEI?.value || '未設定';
-    locationCount.set(location, (locationCount.get(location) || 0) + 1);
+    const genbamei = (record as any).GENBAMEI?.value || '未設定';
+    const genbacode = (record as any).GENBACODE?.value || '（工番なし）';
+
+    // 「現場名: 工番」の形式で集計
+    const key = `${genbamei}:${genbacode}`;
+    locationCount.set(key, (locationCount.get(key) || 0) + 1);
   });
 
   return {
     count: filteredRecords.length,
     locationNames: Array.from(locationCount.entries()).map(
-      ([name, count]) => `${name}(${count})`
+      ([key, count]) => {
+        const [genbamei, genbacode] = key.split(':');
+        return `${genbamei} [${genbacode}](${count})`;
+      }
     ),
   };
 }

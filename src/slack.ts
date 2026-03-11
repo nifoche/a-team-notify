@@ -15,12 +15,45 @@ export async function sendToSlack(
     return;
   }
 
+  // locationNamesから工番と現場名を抽出
+  const parseLocationName = (name: string) => {
+    const match = name.match(/^(.+?) \[(.+?)\]\(\d+\)$/);
+    if (match) {
+      return { genbacode: match[2], genbamei: match[1] };
+    }
+    return { genbacode: '', genbamei: name };
+  };
+
+  const query1List = query1Result.locationNames.map(parseLocationName);
+  const query2List = query2Result.locationNames.map(parseLocationName);
+
+  // テキストを作成（LINE WORKSと同じ形式）
+  let text = `📊 A-team対応案件リスト\n\n` +
+    `✅業務用案件\n` +
+    `条件：完了報告に見積添付があり見積提出が終わっていないもの\n` +
+    `件数：${query1Result.count}件\n` +
+    `現場:\n`;
+
+  query1List.forEach(({ genbacode, genbamei }) => {
+    text += `${genbacode} ${genbamei}\n`;
+  });
+
+  text += `\n` +
+    `🛜管理会社様案件\n` +
+    `条件：完了報告に見積添付があり見積提出が終わっていないもの\n` +
+    `件数：${query2Result.count}件\n` +
+    `現場:\n`;
+
+  query2List.forEach(({ genbacode, genbamei }) => {
+    text += `${genbacode} ${genbamei}\n`;
+  });
+
   const blocks = [
     {
       type: 'header',
       text: {
         type: 'plain_text',
-        text: '📊 Aチーム業務用機器 担当サポート状況',
+        text: '📊 A-team対応案件リスト',
         emoji: true,
       },
     },
@@ -28,44 +61,8 @@ export async function sendToSlack(
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '*クエリ1: 業務用LP/修理（6ヶ月以内、xlsx）*',
+        text: text,
       },
-    },
-    {
-      type: 'section',
-      fields: [
-        {
-          type: 'mrkdwn',
-          text: `*件数:*\n${query1Result.count}件`,
-        },
-        {
-          type: 'mrkdwn',
-          text: `*現場:*\n${query1Result.locationNames.join(', ') || 'なし'}`,
-        },
-      ],
-    },
-    {
-      type: 'divider',
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*クエリ2: 特定現場の特定種別（xlsx）*',
-      },
-    },
-    {
-      type: 'section',
-      fields: [
-        {
-          type: 'mrkdwn',
-          text: `*件数:*\n${query2Result.count}件`,
-        },
-        {
-          type: 'mrkdwn',
-          text: `*現場:*\n${query2Result.locationNames.join(', ') || 'なし'}`,
-        },
-      ],
     },
     {
       type: 'context',
@@ -81,7 +78,7 @@ export async function sendToSlack(
   await client.chat.postMessage({
     channel: SLACK_CHANNEL_ID,
     blocks,
-    text: 'Aチーム業務用機器 担当サポート状況',
+    text: '📊 A-team対応案件リスト',
   });
 
   console.log('✅ Slack通知を送信しました');

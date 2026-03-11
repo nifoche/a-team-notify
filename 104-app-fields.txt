@@ -1,0 +1,751 @@
+=== 104アプリ（現場管理）全フィールド一覧 ===
+
+### FILE
+
+Repotone
+  （ファイルなし）
+
+SAGYOSHIRYO
+  （ファイルなし）
+
+添付ファイル
+  （ファイルなし）
+
+添付ファイル_1
+  （ファイルなし）
+
+添付ファイル_2
+  （ファイルなし）
+
+添付ファイル_3
+  （ファイルなし）
+
+### CHECK_BOX
+
+集計用チェック
+  （選択なし）
+
+SEIKYU_SAKUSEISUMICHECK
+  （選択なし）
+
+CANCEL
+  （選択なし）
+
+SEIKYUCHECK
+  （選択なし）
+
+保証レコード作成済み
+  （選択なし）
+
+その他注意事項に追記する項目
+  （選択なし）
+
+HOJIN
+  （選択なし）
+
+MAEUKECHECK
+  （選択なし）
+
+rousaicheck
+  （選択なし）
+
+SEIKYUSHOSAKUSEI
+  （選択なし）
+
+チェックボックス_6
+  （選択なし）
+
+チェックボックス_7
+  （選択なし）
+
+チェックボックス_4
+  （選択なし）
+
+チェックボックス_5
+  （選択なし）
+
+チェックボックス_8
+  （選択なし）
+
+チェックボックス_9
+  （選択なし）
+
+チェックボックス_2
+  （選択なし）
+
+チェックボックス_3
+  （選択なし）
+
+チェックボックス_0
+  （選択なし）
+
+チェックボックス_1
+  （選択なし）
+
+TORIHIKIKUBUN
+  （選択なし）
+
+KOUGAKUMITSUMORI_ROOT
+  （選択なし）
+
+その他注意事項2
+  （選択なし）
+
+その他注意事項3
+  （選択なし）
+
+その他注意事項1
+  （選択なし）
+
+チェックボックス_12
+  （選択なし）
+
+チェックボックス_13
+  （選択なし）
+
+チェックボックス_10
+  （選択なし）
+
+KICHOCHECK
+  （選択なし）
+
+### DROP_DOWN
+
+SEIKYUSAKUSEIBUNRUI
+
+MITSUMORI_RINJI
+
+ドロップダウン_1
+
+ドロップダウン_0
+
+ドロップダウン_7
+
+ドロップダウン_6
+
+ドロップダウン_8
+  追加工事なし
+
+CAMPAIGN
+
+KOUJIHACCHUUSAKI
+
+### RADIO_BUTTON
+
+tachiai
+  有人(立会)
+
+ISFOLDERCREATED
+  未作成
+
+sagyouhoukoku
+  ✕
+
+RADIO_TUCHI
+  通知なし
+
+ラジオボタン
+  個人
+
+### MULTI_SELECT
+
+複数選択_0
+  業務用エアコン工事
+
+複数選択_2
+  （選択なし）
+
+CAMPAIGN_NEW_
+  （選択なし）
+
+複数選択
+  一般顧客, 物件オーナー, その他
+
+### SINGLE_LINE_TEXT
+
+FURIKOMIBI
+
+KOUJIMEI
+  業務用エアコン交換工事
+
+RANK
+
+KOUJIKYOTEN
+  大阪店
+
+CATEGORYMEI
+  工事案件
+
+KEIYAKURANK
+
+オートロック番号
+  **使用できません**
+
+SEIKYUSHIMEBI
+
+名称1
+
+名称2
+
+文字列__1行__25
+
+文字列__1行__24
+  郵送
+
+文字列__1行__27
+
+文字列__1行__21
+
+文字列__1行__20
+
+文字列__1行__23
+
+文字列__1行__22
+
+GENBACHOSADATE
+
+名称3
+
+KOKYAKUMEI
+  業務用LP
+
+RANKUP
+
+P_SAGYOYOTEIBI_DATE
+  ◆◇工事予定日を入力してください!!◆◇
+
+TEL_OLD
+
+BUMON
+  3
+
+文字列__1行__14
+
+文字列__1行__13
+
+文字列__1行__16
+
+文字列__1行__15
+
+文字列__1行__10
+
+文字列__1行__12
+
+文字列__1行__11
+
+文字列__1行__18
+  OK
+
+文字列__1行__17
+
+文字列__1行__19
+
+OEN_0
+
+TODOFUKEN
+  大阪府
+
+JUCHUMITSUMORIBANGO
+
+KOJISHUBETSUMEI
+
+SAGYOBI
+
+ルックアップ_0
+
+TATEMONOMEI
+  森野様邸
+
+正式名称
+  業務用LP
+
+顧客用_管理番号
+
+invoice_type
+  現場別
+
+pay_method
+  現金/銀行振込
+
+OYAKUSOKUOKYAKUSAMA
+
+GENBACODE
+  20260300738
+
+KANRIHONBUMEMO
+
+MITSUMORIRANK
+
+ルックアップ
+
+FAX_OLD
+
+OEN
+
+BUMONMEI
+  エアコン買取王
+
+ANSHOBANGO
+
+SEIKYUBANGO
+
+URL
+
+JUSHO
+  大阪市住吉区万代東1丁目2-24
+
+CATEGORY
+  000
+
+KOKYAKUTANTOSHAMEI
+
+RECORDTITLE
+  20260300738 森野様邸　業務用エアコン
+
+KOJISHUBETSU
+
+YUBINBANGO
+
+NYUKINSITE_HI
+
+SAGYOYOTEIBI
+
+NYUKINSITE_TSUKI
+
+KOKYAKUTANTOSHAMEI_FURIGANA
+
+ROOMNO
+
+GENBAMEI
+  森野様邸　業務用エアコン
+
+SHIMEKIRI
+
+MEMO_KEIRI
+
+TEL2_OLD
+
+NYUKINSAKI
+
+SHIMEBI
+
+kokyaku_tekiyou
+
+TELBIKO2
+
+文字列__1行__0
+  一般顧客
+
+文字列__1行__1
+  顧客名　　　：業務用LP　担当者　　　：　弊社管理番号：20260300738　物件名　　　：森野様邸　部屋番号　　：　住所　　　　：大阪府大阪市住吉区万代東1丁目2-24　工事内容　　：業務用エアコ
+
+文字列__1行__4
+
+TELBIKO
+  森野
+
+文字列__1行__2
+
+文字列__1行__3
+
+文字列__1行__8
+
+文字列__1行__9
+  使用不可。表示されている場合、連絡ください
+
+文字列__1行__7
+
+KOKYAKUCODE
+  00008347
+
+### MULTI_LINE_TEXT
+
+TEL_SEARCH
+  090-3350-0487
+
+
+
+09033500487
+
+
+
+CATEGORYSAGYONAIYO
+
+SAGYONAIYO
+
+kokyakuiraimemo
+
+転記文書1
+
+転記文書2
+
+転記文書3
+
+文字列__複数行_
+
+TEKIYO
+
+エアコンECOパック対象
+  【エアコンECOパック対象】
+＊本件の既設エアコンは、原則オートロック内の共用部に残置をお願い致します。
+その際、袋に入れてまとめていただき、残置した状況のわかる写真も登録をお願い致します。
+残置場所
+
+文字列__複数行__1
+
+文字列__複数行__0
+
+文字列__複数行__3
+
+文字列__複数行__5
+  ◆取付：室外機設置場所→　ベランダ床置き・天吊り・壁面・屋上(侵入方法確認必須)
+　　　　エアコン 設置場所 → １R・LDK・○○洋室
+　　　　
+◆取外：既設型番：
+　　　　室外機：　高さ　×横幅　
+
+### NUMBER
+
+GAICHUHI
+
+計画_2_外注費
+
+MOKUHYOSEKOJIKAN
+
+数値_4
+
+数値_3
+
+計画原価合計_税別_
+
+INSHOKUDAI
+
+数値_0
+
+数値_2
+
+数値_1
+
+KANRIARARI_KANSETSUZAIRYOHI
+  0
+
+soutei_arari
+
+KANRIARARI
+  0
+
+完了報告・請求件数
+
+計画_5_リース料
+
+SONOTA
+
+BIHINSHOMOHIN
+
+計画_6_紹介手数料
+
+KANRIARARI_KEIHI
+  0
+
+計画_1_材料費
+
+JUGYOINKOSU
+
+MITSUMORIKINGAKU
+
+KANRIARARI_HONNINKOCHIN
+  0
+
+KEIYAKUKINGAKUZEIKOMI_ROUND
+
+数値
+
+_5年保証料合計
+
+計画_8_その他
+
+BUKKEN_NO
+
+LEASERYO
+
+_3年保証料合計
+
+計画粗利金額
+
+MITSUMORI_CHECK
+  0
+
+JUKOURYOUZEINUKI
+
+売上
+
+KOTSUHI
+
+SHOKAITESURYO
+
+KEIYAKUKINGAKU
+
+KANRIARARI_GAICHUHI
+  0
+
+DENKISETSUBITENKI
+
+KANRIARARI_SHANAIJUCHUGAKU
+  0
+
+NYUKINKINGAKU
+
+_10年保証料合計
+
+KANRIARARI_CHOKUSETSUZAIRYOHI
+  0
+
+計画_3_交通費
+
+KANRIARARI_SHANAIKOCHIN
+  0
+
+ZAIRYOHI
+
+### CALC
+
+計算_2
+  -20525
+
+計算_3
+
+計算_1
+  0
+
+NYUKINKINGAKU_0
+  0
+
+KABUSOKUKINGAKU
+  0
+
+hyouji_SAGYOYOTEIBI_DATE
+
+GENKAGOKEI
+  0
+
+RIEKI
+  0
+
+KEIYAKUKINGAKUZAIKOMI_0
+  0
+
+計算
+  0
+
+対応経過日数
+  0
+
+MITSUMORIKINGAKU_TAXIN
+  0
+
+KEIYAKUKINGAKUZAIKOMI
+  0
+
+NyukinGoukei
+  0
+
+genchou_DATE_3
+  2026-03-14
+
+GENKARITSU
+
+GENKARITSU_0
+
+hyouji_genchou_DATE
+  2026-03-13
+
+sagaku_NYUKINGAKU
+
+hyouji_mitumori_post
+
+SUM_NYUKINGAKU
+  0
+
+hyouji_MITSUMORIKINGAKU
+
+### DATE
+
+NITTEISHUURYOUBI
+
+genchou_DATE
+  2026-03-13
+
+FURIKOMIKIGEN
+
+SEIKYUYOTEIDATE
+  2026-03-13
+
+対象月
+
+UKETSUKEDATE
+  2026-03-11
+
+OYAKUSOKUNYUKINBI
+
+mitumori_post
+
+SAGYOYOTEIBI_DATE
+
+NYUKINBI_KEIRI
+
+dlink_check
+
+JUCHUBI
+
+SEIKYUDATE
+
+最終対応日
+
+KOJIKANRYODATE
+
+NITTEISHONICHI
+
+shicchuu_day
+
+工事依頼転記用
+  2026-03-13
+
+SEIKYUYOTEIBI_CHANGE
+
+SEIKYUBI
+
+対応開始日
+
+日付_5
+
+日付_4
+
+日付_6
+
+日付_9
+
+日付_0
+
+日付_3
+
+### DATETIME
+
+日時_3
+
+日時_2
+
+SAISHUTAIONICHIJI
+  2026-03-11T07:17:00Z
+
+日時_1
+
+請求送付依頼日時
+
+### LINK
+
+GAZOFOLDERLNK
+
+リンク
+  gd0801.assetcockpit@gmail.com
+
+TANTOSHA_MAIL
+
+TANTOSHA_TEL
+
+FAX
+
+ANKENFOLDERLNK
+
+TEL2
+
+TEL
+  090-3350-0487
+
+### USER_SELECT
+
+ユーザー選択
+  （ユーザーなし）
+
+MITSUMORISHA
+  （ユーザーなし）
+
+SEKOSHA
+  - 田原　良祐
+
+TANTOSHAIN
+  - 田原　良祐
+
+### STATUS_ASSIGNEE
+
+作業者
+  （ユーザーなし）
+
+### SUBTABLE
+
+KEIRIYONYUKINKIROKU
+  （サブテーブル）
+
+テーブル_2
+  （サブテーブル）
+
+テーブル_1
+  （サブテーブル）
+
+テーブル_0
+  （サブテーブル）
+
+テーブル
+  （サブテーブル）
+
+テーブル_4
+  （サブテーブル）
+
+Table_1
+  （サブテーブル）
+
+GENKINNYUKINTABLE
+  （サブテーブル）
+
+Table
+  （サブテーブル）
+
+### STATUS
+
+ステータス
+  未着手
+
+### RECORD_NUMBER
+
+RECORDBANGO
+  kak-114971
+
+### CREATED_TIME
+
+CreateDate
+  2026-03-11T07:17:00Z
+
+### UPDATED_TIME
+
+更新日時
+  2026-03-11T07:17:00Z
+
+### CREATOR
+
+作成者
+  田原　良祐
+
+### MODIFIER
+
+更新者
+  田原　良祐
+
+### __ID__
+
+$id
+  114971
+
+### __REVISION__
+
+$revision
+  1
+

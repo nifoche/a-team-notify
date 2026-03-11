@@ -1,0 +1,21 @@
+name = "a-team-notify"
+main = "dist/index.js"
+compatibility_date = "2024-01-01"
+
+# Cron Triggers for JST 9:00 and 17:00
+# JST 9:00 = UTC 0:00
+# JST 17:00 = UTC 8:00
+[triggers]
+crons = ["0 0 * * *", "0 8 * * *"]
+
+# Environment variables
+[vars]
+# No public variables needed
+
+# Secrets (use wrangler secret put to set these)
+# - KINTONE_DOMAIN
+# - KINTONE_APP_ID
+# - KINTONE_API_TOKEN
+# - LINEWORKS_WEBHOOK_URL
+# - SLACK_BOT_TOKEN (optional)
+# - SLACK_CHANNEL_ID (optional)

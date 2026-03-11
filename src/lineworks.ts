@@ -12,21 +12,40 @@ export async function sendToLINEWORKSWebhook(
   query1Result: QueryResult,
   query2Result: QueryResult
 ): Promise<void> {
-  const text = `📊 Aチーム業務用機器 担当サポート状況
+  // locationNamesから工番と現場名を抽出
+  const parseLocationName = (name: string) => {
+    const match = name.match(/^(.+?) \[(.+?)\]\(\d+\)$/);
+    if (match) {
+      return { genbacode: match[2], genbamei: match[1] };
+    }
+    return { genbacode: '', genbamei: name };
+  };
 
-━━━━━━━━━━━━━━
-【クエリ1】業務用LP/修理（6ヶ月以内）
-━━━━━━━━━━━━━━
-件数: ${query1Result.count}件
-現場: ${query1Result.locationNames.join(', ') || 'なし'}
+  const query1List = query1Result.locationNames.map(parseLocationName);
+  const query2List = query2Result.locationNames.map(parseLocationName);
 
-━━━━━━━━━━━━━━
-【クエリ2】特定現場の特定種別
-━━━━━━━━━━━━━━
-件数: ${query2Result.count}件
-現場: ${query2Result.locationNames.join(', ') || 'なし'}
+  // セクション1: 業務用案件
+  let text = `📊 A-team対応案件リスト
 
-更新日時: ${new Date().toLocaleString('ja-JP')}`;
+✅業務用案件
+条件：完了報告に見積添付があり見積提出が終わっていないもの
+件数：${query1Result.count}件
+現場:
+`;
+  query1List.forEach(({ genbacode, genbamei }) => {
+    text += `${genbacode} ${genbamei}\n`;
+  });
+
+  // セクション2: 管理会社様案件
+  text += `
+🛜管理会社様案件
+条件：完了報告に見積添付があり見積提出が終わっていないもの
+件数：${query2Result.count}件
+現場:
+`;
+  query2List.forEach(({ genbacode, genbamei }) => {
+    text += `${genbacode} ${genbamei}\n`;
+  });
 
   // LINE WORKS Webhookに送信（JSON body形式）
   await axios.post(LINEWORKS_WEBHOOK_URL!, {
