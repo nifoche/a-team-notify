@@ -1,12 +1,13 @@
 name = "a-team-notify"
 main = "dist/index.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
 
-# Cron Triggers for JST 9:00 and 17:00
-# JST 9:00 = UTC 0:00
+# Cron Triggers for JST 8:30 and 17:00
+# JST 8:30 = UTC 23:30 (previous day)
 # JST 17:00 = UTC 8:00
 [triggers]
-crons = ["0 0 * * *", "0 8 * * *"]
+crons = ["30 23 * * *", "0 8 * * *"]
 
 # Environment variables
 [vars]

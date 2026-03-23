@@ -2,8 +2,8 @@ name: A-team Notification
 
 on:
   schedule:
-    # JST 9:00 = UTC 0:00
-    - cron: '0 0 * * *'
+    # JST 8:30 = UTC 23:30 (previous day)
+    - cron: '30 23 * * *'
     # JST 17:00 = UTC 8:00
     - cron: '0 8 * * *'
   workflow_dispatch:  # 手動実行も可能にする
