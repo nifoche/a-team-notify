@@ -1,0 +1,24 @@
+name: Keep Alive
+
+on:
+  schedule:
+    # 毎日8:55 JST (23:55 UTC)
+    - cron: '55 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Keep repository active
+        run: |
+          echo "Keeping repository active: $(date)"
+          # リポジトリのアクティビティを維持
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Keep alive: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push || echo "Push skipped"
